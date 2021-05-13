@@ -113,7 +113,7 @@ namespace Daf.Meta.Editor.ViewModels
 
 		private bool CanDeleteLoadColumn()
 		{
-			if (SelectedColumn == null)
+			if (SelectedColumns == null)
 				return false;
 			else
 				return true;
@@ -121,13 +121,18 @@ namespace Daf.Meta.Editor.ViewModels
 
 		private void DeleteLoadColumn()
 		{
-			if (SelectedDataSource == null || SelectedColumn == null)
+			if (SelectedDataSource == null || SelectedColumns == null)
 				throw new InvalidOperationException();
 
-			SelectedDataSource.RemoveLoadColumn(SelectedColumn.Column);
+			foreach (ColumnViewModel columnViewModel in SelectedColumns)
+			{
+				// Set a default value for the list of columns in the combobox.
+				// Must set all stagingcolumns to null in HubRelationships etc
+				SelectedDataSource.RemoveLoadColumn(columnViewModel.Column);
 
-			// Remove the view model column from the list.
-			Columns.Remove(SelectedColumn);
+				// Remove the view model column from the list.
+				Columns.Remove(columnViewModel);
+			}
 		}
 	}
 }
