@@ -4,14 +4,16 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using Daf.Meta.Layers;
+using GongSolutions.Wpf.DragDrop;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
-using Daf.Meta.Layers;
 
 namespace Daf.Meta.Editor.ViewModels
 {
-	public class LoadViewModel : ObservableObject
+	public class LoadViewModel : ObservableObject, IDropTarget
 	{
 		public RelayCommand AddLoadColumnCommand { get; }
 		public RelayCommand DeleteLoadColumnCommand { get; }
@@ -21,6 +23,16 @@ namespace Daf.Meta.Editor.ViewModels
 			AddLoadColumnCommand = new RelayCommand(AddLoadColumn);
 			DeleteLoadColumnCommand = new RelayCommand(DeleteLoadColumn, CanDeleteLoadColumn);
 			WeakReferenceMessenger.Default.Register<LoadViewModel, RefreshedMetadata>(this, (r, m) => { RefreshedMetadata(); });
+
+			Columns.CollectionChanged += Colums_CollectionChanged;
+		}
+
+		private void Colums_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+		{
+			// When you drag/drop, this gets triggered twice. First the object gets removed from its original place, then it gets reinserted at its new index.
+
+			// When you drag/drop several items at once, it will first remove each item consecutively, then add each item consecutively.
+			// So there are n removals followed by n additions.
 		}
 
 		private void RefreshedMetadata()
@@ -128,6 +140,16 @@ namespace Daf.Meta.Editor.ViewModels
 
 			// Remove the view model column from the list.
 			Columns.Remove(SelectedColumn);
+		}
+
+		//public void DragOver(IDropInfo dropInfo)
+		//{
+		//	return;
+		//}
+
+		public void Drop(IDropInfo dropInfo)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

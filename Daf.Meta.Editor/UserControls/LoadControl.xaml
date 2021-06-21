@@ -59,7 +59,7 @@
 			<ListBox VirtualizingPanel.IsVirtualizing="False" HorizontalContentAlignment="Stretch" Grid.Row="2" 
 					 Name="columnsListNew" HorizontalAlignment="Left" ItemsSource="{Binding Path=Columns}" 
 					 SelectionChanged="LoadColumnsList_SelectionChanged" SelectionMode="Extended" dd:DragDrop.IsDragSource="True" 
-					 dd:DragDrop.IsDropTarget="True" IsTabStop="False" KeyboardNavigation.TabNavigation="Once">
+					 dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}" dd:DragDrop. IsTabStop="False" KeyboardNavigation.TabNavigation="Once">
 				<ListBox.Resources>
 					<Style TargetType="Border">
 						<Setter Property="CornerRadius" Value="3"/>
